@@ -1,6 +1,6 @@
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a repository for a test at Grupo Boticário.
 
 ## Installation
 
