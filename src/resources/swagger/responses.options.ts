@@ -189,3 +189,35 @@ export const deleteUserResponse: ApiResponseSchema = {
         },
     },
 };
+
+export const SignInUserResponse: ApiResponseSchema = {
+    ok: {
+        schema: {
+            example: {
+                access_token:
+                    '$2a$10$TYLWGxA6wUQLgHbxEaUSveJZJ9hzdtc6YcVMj/3uzirSUr5u3dQM.',
+            },
+        },
+    },
+    unauthorized: {
+        schema: {
+            example: {
+                message: 'wrong credentials provided',
+                error: 'Unauthorized',
+                statusCode: 401,
+            },
+        },
+    },
+};
+
+export const GetProfileResponse: ApiResponseSchema = {
+    ok: {
+        schema: {
+            example: {
+                email: 'email@test.com',
+                id: 1,
+                role: 'admin',
+            },
+        },
+    },
+};
