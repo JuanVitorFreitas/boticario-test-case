@@ -18,6 +18,15 @@ $ docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pass123 postgr
 $ docker ps
 ```
 
+## Create a `.env` file in the project root folder. Example constants
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+
+# Secret used to create the JWT tokens
+JWT_SECRET = '**********'
+```
+
 ## Running the app
 
 ```bash
@@ -54,16 +63,5 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
--   Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
--   Website - [https://nestjs.com](https://nestjs.com/)
--   Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+-   Start the project
+-   Happy coding 😃
