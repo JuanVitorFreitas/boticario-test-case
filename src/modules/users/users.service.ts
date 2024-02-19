@@ -3,7 +3,6 @@ import {
     Injectable,
     Logger,
     NotFoundException,
-    Scope,
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import bcrypt from 'bcrypt';
