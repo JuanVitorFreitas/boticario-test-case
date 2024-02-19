@@ -3,6 +3,8 @@ import { Role } from '../../../enums/roles.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
+
+
     @IsEmail()
     @IsNotEmpty()
     email: string;
@@ -20,7 +22,11 @@ export class CreateUserDto {
     })
     role: Role;
 
-    @Length(13)
+    /**
+  * É necessário informar um telefone juntamente com DDD
+  * @example 11999999999
+  */
+    @Length(11)
     phoneNumber: string;
 
 }
