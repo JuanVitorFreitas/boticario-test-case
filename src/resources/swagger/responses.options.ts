@@ -1,19 +1,5 @@
 import { ApiResponseOptions } from '@nestjs/swagger';
 
-export const createUserSuccess: ApiResponseOptions = {
-    schema: {
-        example: {
-            email: 'test@test.com',
-            name: 'Test User',
-            createdAt: '2024-02-18T08:59:34.507Z',
-            phoneNumber: '11999999997',
-            status: 'inactive',
-            role: 'admin',
-        },
-    },
-    isArray: false,
-};
-
 export type ApiResponseSchema = {
     [key in
         | 'success'
