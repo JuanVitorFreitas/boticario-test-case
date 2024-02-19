@@ -21,7 +21,7 @@ $ docker ps
 ## Create a `.env` file in the project root folder. Example constants
 
 ```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+DATABASE_URL="postgresql://postgres:pass123@localhost:5432/postgres?schema=public"
 
 # Secret used to create the JWT tokens
 JWT_SECRET = '**********'
