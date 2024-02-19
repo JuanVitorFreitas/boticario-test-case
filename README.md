@@ -38,6 +38,9 @@ $ pnpm run start:dev
 
 # production mode
 $ pnpm run start:prod
+
+# run seed to create initial data on DB
+$ npx prisma db seed
 ```
 
 ## Swagger UI
