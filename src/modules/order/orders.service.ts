@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PrismaErrorCodes } from '../../constants';
 import { PrismaService } from '../../prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -64,20 +70,22 @@ export class OrdersService {
     }
 
     async remove(pedido_id: number) {
-        const order = await this.prisma.pedido.findUnique({
-            where: {
-                pedido_id,
-            },
-        });
-
-        if (!order) {
-            throw new NotFoundException('order not found');
+        try {
+            await this.prisma.pedido.delete({
+                where: {
+                    pedido_id,
+                },
+            });
+        } catch (err) {
+            if (err instanceof PrismaClientKnownRequestError) {
+                if (err.code === PrismaErrorCodes.ForeignKeyConstraintFailed) {
+                    const fieldName = err.meta?.field_name as string;
+                    throw new ConflictException(
+                        `Foreign key constraint on field ${fieldName}`
+                    );
+                }
+            }
+            throw err;
         }
-
-        await this.prisma.pedido.delete({
-            where: {
-                pedido_id,
-            },
-        });
     }
 }

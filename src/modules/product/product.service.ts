@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PrismaErrorCodes } from '../../constants';
 import { PrismaService } from '../../prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -67,20 +73,32 @@ export class ProductService {
     }
 
     async remove(produto_id: number) {
-        const product = await this.prisma.produto.findUnique({
-            where: {
-                produto_id,
-            },
-        });
+        try {
+            const product = await this.prisma.produto.findUnique({
+                where: {
+                    produto_id,
+                },
+            });
 
-        if (!product) {
-            throw new NotFoundException('product not found');
+            if (!product) {
+                throw new NotFoundException('product not found');
+            }
+
+            await this.prisma.produto.delete({
+                where: {
+                    produto_id,
+                },
+            });
+        } catch (err) {
+            if (err instanceof PrismaClientKnownRequestError) {
+                if (err.code === PrismaErrorCodes.ForeignKeyConstraintFailed) {
+                    const fieldName = err.meta?.field_name as string;
+                    throw new ConflictException(
+                        `Foreign key constraint on field ${fieldName}`
+                    );
+                }
+            }
+            throw err;
         }
-
-        await this.prisma.produto.delete({
-            where: {
-                produto_id,
-            },
-        });
     }
 }

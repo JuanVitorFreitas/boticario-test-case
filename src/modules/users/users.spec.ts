@@ -34,7 +34,7 @@ describe('UsersService', () => {
             const response = await service.findAll();
 
             expect(response).toEqual(usersMock);
-            expect(prisma.user.findMany).toHaveBeenCalledTimes(1);
+            expect(prisma.cliente.findMany).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -43,8 +43,8 @@ describe('UsersService', () => {
             const response = await service.findOne(1);
 
             expect(response).toEqual(usersMock[0]);
-            expect(prisma.user.findFirst).toHaveBeenCalledTimes(1);
-            expect(prisma.user.findFirst).toHaveBeenCalledWith({
+            expect(prisma.cliente.findFirst).toHaveBeenCalledTimes(1);
+            expect(prisma.cliente.findFirst).toHaveBeenCalledWith({
                 where: { id: 1 },
                 select: {
                     email: true,
@@ -58,7 +58,7 @@ describe('UsersService', () => {
         });
 
         it(`should return NotFoundException when no user is found`, async () => {
-            jest.spyOn(prisma.user, 'findFirst').mockRejectedValue(
+            jest.spyOn(prisma.cliente, 'findFirst').mockRejectedValue(
                 new NotFoundException('user not found')
             );
 
@@ -66,8 +66,8 @@ describe('UsersService', () => {
                 new NotFoundException('user not found')
             );
 
-            expect(prisma.user.findFirst).toHaveBeenCalledTimes(1);
-            expect(prisma.user.findFirst).toHaveBeenCalledWith({
+            expect(prisma.cliente.findFirst).toHaveBeenCalledTimes(1);
+            expect(prisma.cliente.findFirst).toHaveBeenCalledWith({
                 where: { id: 100 },
                 select: {
                     email: true,
@@ -87,7 +87,7 @@ describe('UsersService', () => {
             console.log(response);
 
             expect(response).toStrictEqual(createUserResponseMock);
-            expect(prisma.user.create).toHaveBeenCalledTimes(1);
+            expect(prisma.cliente.create).toHaveBeenCalledTimes(1);
         });
 
         it('should return ConflitException when duplicated email', async () => {
@@ -100,7 +100,7 @@ describe('UsersService', () => {
                 status: 'active',
             };
 
-            jest.spyOn(prisma.user, 'create').mockRejectedValue(
+            jest.spyOn(prisma.cliente, 'create').mockRejectedValue(
                 new ConflictException('duplicated-email')
             );
 
@@ -108,7 +108,7 @@ describe('UsersService', () => {
                 new ConflictException('duplicated-email')
             );
 
-            expect(prisma.user.create).toHaveBeenCalledTimes(1);
+            expect(prisma.cliente.create).toHaveBeenCalledTimes(1);
         });
 
         it('should return ConflitException when duplicated phone number', async () => {
@@ -121,14 +121,14 @@ describe('UsersService', () => {
                 status: 'active',
             };
 
-            jest.spyOn(prisma.user, 'create').mockRejectedValue(
+            jest.spyOn(prisma.cliente, 'create').mockRejectedValue(
                 new ConflictException('duplicated-phone-number')
             );
             await expect(service.create(user)).rejects.toEqual(
                 new ConflictException('duplicated-phone-number')
             );
 
-            expect(prisma.user.create).toHaveBeenCalledTimes(1);
+            expect(prisma.cliente.create).toHaveBeenCalledTimes(1);
         });
     });
 });
