@@ -6,9 +6,10 @@ import {
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import bcrypt from 'bcrypt';
+import { plainToClass } from 'class-transformer';
 import { PrismaErrorCodes } from '../../constants';
 import { PrismaService } from '../../prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
@@ -17,23 +18,38 @@ export class UsersService {
 
     private readonly logger = new Logger(UsersService.name);
 
-    async create(data: CreateUserDto) {
+    async create({
+        cpf,
+        data_nascimento,
+        email,
+        nome,
+        senha,
+        telefone,
+        username,
+    }: CreateUserDto) {
         try {
-            const hashedPassword = await bcrypt.hash(data.password, 10);
-            const { createdAt, email, id, name, phoneNumber, role, status } =
-                await this.prisma.user.create({
-                    data: { ...data, password: hashedPassword },
-                });
-            return { createdAt, email, id, name, phoneNumber, role, status };
+            let pass: string | null = null;
+            if (senha) {
+                pass = await bcrypt.hash(senha, 10);
+            }
+            const user = await this.prisma.cliente.create({
+                data: {
+                    nome,
+                    cpf,
+                    telefone,
+                    data_nascimento,
+                    email,
+                    senha: pass,
+                    username,
+                },
+            });
+            return plainToClass(UserDto, user);
         } catch (err) {
             if (err instanceof PrismaClientKnownRequestError) {
                 if (err.code === PrismaErrorCodes.UniqueConstraintFailed) {
                     const target = err.meta?.target as string[] | undefined;
-                    if (target?.includes('email')) {
-                        throw new ConflictException('duplicated-email');
-                    }
-                    if (target?.includes('phoneNumber')) {
-                        throw new ConflictException('duplicated-phone-number');
+                    if (target?.includes('cpf')) {
+                        throw new ConflictException('duplicated-cpf');
                     }
                 }
             }
@@ -42,53 +58,48 @@ export class UsersService {
     }
 
     async update(id: number, updateUserDto: UpdateUserDto) {
-        const { name, password, phoneNumber, role, status } = updateUserDto;
-        const user = await this.prisma.user.findFirst({
-            where: {
-                id,
-            },
-            select: {
-                email: true,
-                name: true,
-                status: true,
-            },
-        });
-
-        if (!user) {
-            throw new NotFoundException('user not found');
-        }
-
         try {
-            await this.prisma.$transaction(async (prisma) => {
-                await prisma.user.update({
-                    where: {
-                        id,
-                    },
-                    data: {
-                        name,
-                        password,
-                        phoneNumber,
-                        role,
-                        status,
-                    },
-                });
+            const { data_nascimento, email, nome, senha, telefone, username } =
+                updateUserDto;
+
+            await this.prisma.cliente.update({
+                where: {
+                    cliente_id: id,
+                },
+                data: {
+                    telefone,
+                    username,
+                    nome,
+                    senha,
+                    email,
+                    data_nascimento,
+                },
             });
         } catch (err) {
+            if (err instanceof PrismaClientKnownRequestError) {
+                if (err.code === PrismaErrorCodes.UniqueConstraintFailed) {
+                    const target = err.meta?.target as string[] | undefined;
+                    if (target?.includes('cpf')) {
+                        throw new ConflictException('duplicated-cpf');
+                    }
+                }
+            }
             throw err;
         }
     }
 
-    async findByEmail(email: string) {
-        const user = await this.prisma.user.findUnique({
+    async findByCpf(cpf: string) {
+        const user = await this.prisma.cliente.findUnique({
             where: {
-                email,
+                cpf,
             },
             select: {
                 email: true,
-                password: true,
-                id: true,
-                role: true,
-                status: true,
+                senha: true,
+                cliente_id: true,
+                nome: true,
+                telefone: true,
+                username: true,
             },
         });
 
@@ -100,17 +111,19 @@ export class UsersService {
     }
 
     async findOne(id: number) {
-        const user = await this.prisma.user.findFirst({
+        const user = await this.prisma.cliente.findFirst({
             where: {
-                id,
+                cliente_id: id,
             },
             select: {
                 email: true,
-                name: true,
-                phoneNumber: true,
-                role: true,
-                status: true,
+                nome: true,
+                telefone: true,
+                username: true,
+                cpf: true,
                 createdAt: true,
+                updatedAt: true,
+                data_nascimento: true,
             },
         });
 
@@ -122,36 +135,39 @@ export class UsersService {
     }
 
     async findAll() {
-        const user = await this.prisma.user.findMany({
+        const user = await this.prisma.cliente.findMany({
             select: {
                 email: true,
-                name: true,
+                nome: true,
+                telefone: true,
+                username: true,
+                cpf: true,
                 createdAt: true,
-                phoneNumber: true,
-                status: true,
                 updatedAt: true,
-                id: true,
-                role: true,
+                data_nascimento: true,
+                cliente_id: true,
             },
         });
         return user;
     }
 
     async delete(id: number) {
-        const user = await this.prisma.user.findFirst({
-            where: {
-                id,
-            },
-        });
-
-        if (!user) {
-            throw new NotFoundException('user not found');
+        try {
+            await this.prisma.cliente.delete({
+                where: {
+                    cliente_id: id,
+                },
+            });
+        } catch (err) {
+            if (err instanceof PrismaClientKnownRequestError) {
+                if (err.code === PrismaErrorCodes.ForeignKeyConstraintFailed) {
+                    const fieldName = err.meta?.field_name as string;
+                    throw new ConflictException(
+                        `Foreign key constraint on field ${fieldName}`
+                    );
+                }
+            }
+            throw err;
         }
-
-        await this.prisma.user.delete({
-            where: {
-                id,
-            },
-        });
     }
 }
