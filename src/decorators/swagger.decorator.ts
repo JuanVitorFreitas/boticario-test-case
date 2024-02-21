@@ -6,7 +6,7 @@ import {
     ApiOkResponse,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiResponseSchema } from '../resources/swagger/responses.options';
+import { ApiResponseSchema } from '../resources/swagger/user-responses.options';
 
 export function Swagger(schema: ApiResponseSchema) {
     const decorators: (MethodDecorator & ClassDecorator)[] = [];

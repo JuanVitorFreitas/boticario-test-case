@@ -14,11 +14,12 @@ export const createUserResponse: ApiResponseSchema = {
         schema: {
             example: {
                 email: 'test@test.com',
-                name: 'Test User',
+                usermame: 'testuser',
+                nome: 'Test User',
+                cpf: '12345678901',
+                telefone: '11999999997',
+                data_nascimento: '2000-02-18T08:59:34.507Z',
                 createdAt: '2024-02-18T08:59:34.507Z',
-                phoneNumber: '11999999997',
-                status: 'inactive',
-                role: 'admin',
             },
         },
         // description: 'Return error 404 when user not found',
@@ -35,7 +36,7 @@ export const createUserResponse: ApiResponseSchema = {
     conflict: {
         schema: {
             example: {
-                message: 'duplicate-field',
+                message: 'duplicate-cpf',
                 error: 'Conflict',
                 statusCode: 409,
             },
@@ -56,7 +57,7 @@ export const updateUserResponse: ApiResponseSchema = {
     conflict: {
         schema: {
             example: {
-                message: 'duplicate-field',
+                message: 'duplicate-cpf',
                 error: 'Conflict',
                 statusCode: 409,
             },
@@ -79,19 +80,21 @@ export const findAllResponse: ApiResponseSchema = {
             example: [
                 {
                     email: 'test@test.com',
-                    name: 'Test User',
+                    usermame: 'testuser',
+                    nome: 'Test User',
+                    cpf: '12345678901',
+                    telefone: '11999999997',
+                    data_nascimento: '2000-02-18T08:59:34.507Z',
                     createdAt: '2024-02-18T08:59:34.507Z',
-                    phoneNumber: '11999999997',
-                    status: 'inactive',
-                    role: 'admin',
                 },
                 {
                     email: 'test1@test.com',
-                    name: 'Test User 1',
+                    usermame: 'testuser1',
+                    nome: 'Test User 1',
+                    cpf: '12345678902',
+                    telefone: '11999999997',
+                    data_nascimento: '2005-02-18T08:59:34.507Z',
                     createdAt: '2024-02-18T08:59:34.507Z',
-                    phoneNumber: '11999999998',
-                    status: 'active',
-                    role: 'user',
                 },
             ],
         },
@@ -106,24 +109,6 @@ export const findAllResponse: ApiResponseSchema = {
             },
         },
     },
-    conflict: {
-        schema: {
-            example: {
-                message: 'duplicate-field',
-                error: 'Conflict',
-                statusCode: 409,
-            },
-        },
-    },
-    notFound: {
-        schema: {
-            example: {
-                message: 'user not found',
-                error: 'Not Found',
-                statusCode: 404,
-            },
-        },
-    },
 };
 
 export const findOneResponse: ApiResponseSchema = {
@@ -131,11 +116,12 @@ export const findOneResponse: ApiResponseSchema = {
         schema: {
             example: {
                 email: 'test@test.com',
-                name: 'Test User',
+                usermame: 'testuser',
+                nome: 'Test User',
+                cpf: '12345678901',
+                telefone: '11999999997',
+                data_nascimento: '2000-02-18T08:59:34.507Z',
                 createdAt: '2024-02-18T08:59:34.507Z',
-                phoneNumber: '11999999997',
-                status: 'inactive',
-                role: 'admin',
             },
         },
         // description: 'Return error 404 when user not found',
@@ -152,7 +138,7 @@ export const findOneResponse: ApiResponseSchema = {
     conflict: {
         schema: {
             example: {
-                message: 'duplicate-field',
+                message: 'duplicate-cpf',
                 error: 'Conflict',
                 statusCode: 409,
             },
@@ -216,7 +202,6 @@ export const GetProfileResponse: ApiResponseSchema = {
             example: {
                 email: 'email@test.com',
                 id: 1,
-                role: 'admin',
             },
         },
     },

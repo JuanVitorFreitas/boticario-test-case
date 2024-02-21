@@ -15,8 +15,9 @@ import { AuthGuard } from '../../guards/auth.guard';
 import {
     GetProfileResponse,
     SignInUserResponse,
-} from '../../resources/swagger/responses.options';
+} from '../../resources/swagger/user-responses.options';
 import { AuthService } from './auth.service';
+import { SigInDto } from './dto/signin.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -27,8 +28,8 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Swagger(SignInUserResponse)
     @Post('login')
-    signIn(@Body() signInDto: Record<string, any>) {
-        return this.authService.signIn(signInDto.email, signInDto.password);
+    signIn(@Body() signInDto: SigInDto) {
+        return this.authService.signIn(signInDto);
     }
 
     @UseGuards(AuthGuard)

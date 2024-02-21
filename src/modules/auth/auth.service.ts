@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
-import { UserStatus } from '../../enums/userStatus.enum';
 import { UsersService } from '../users/users.service';
+import { SigInDto } from './dto/signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,26 +11,20 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
-    async signIn(
-        email: string,
-        password: string
-    ): Promise<{ access_token: string }> {
-        const user = await this.usersService.findByEmail(email);
+    async signIn({ cpf, senha }: SigInDto): Promise<{ access_token: string }> {
+        const user = await this.usersService.findByCpf(cpf);
 
-        if (user.status === UserStatus.Inactive) {
-            throw new UnauthorizedException('user account not active');
+        if (!user.senha) {
+            throw new UnauthorizedException('user without password');
         }
 
-        const isPasswordMatching = await bcrypt.compare(
-            password,
-            user.password
-        );
+        const isPasswordMatching = await bcrypt.compare(senha, user.senha);
 
         if (!isPasswordMatching) {
             throw new UnauthorizedException('wrong credentials provided');
         }
 
-        const payload = { sub: user.id, email: user.email, role: user.role };
+        const payload = { sub: user.cliente_id, email: user.email };
         return {
             access_token: await this.jwtService.signAsync(payload),
         };

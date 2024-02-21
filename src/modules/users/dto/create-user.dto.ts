@@ -1,32 +1,47 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, Length, MinLength } from 'class-validator';
-import { Role } from '../../../enums/roles.enum';
-import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
+import {
+    IsEmail,
+    IsISO8601,
+    IsNotEmpty,
+    IsOptional,
+    IsPhoneNumber,
+    IsString,
+    Length,
+    MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
-
-
     @IsEmail()
-    @IsNotEmpty()
-    email: string;
+    @IsOptional()
+    email?: string;
 
+    @IsOptional()
     @IsString()
-    name: string;
+    username?: string;
 
     @MinLength(6)
-    password: string;
+    @IsOptional()
+    senha?: string;
 
-    @IsEnum(Role)
-    @ApiProperty({
-        description: 'User Role',
-        enum: Role
-    })
-    role: Role;
+    @IsString()
+    @IsOptional()
+    nome?: string;
 
-    /**
-  * É necessário informar um telefone juntamente com DDD
-  * @example 11999999999
-  */
     @Length(11)
-    phoneNumber: string;
+    @IsNotEmpty()
+    cpf: string;
 
+    @Length(11)
+    @IsPhoneNumber('BR')
+    @IsOptional()
+    telefone: string;
+
+    @IsISO8601()
+    @IsOptional()
+    data_nascimento: Date;
+}
+
+export class UserDto extends CreateUserDto {
+    @Exclude()
+    senha: string;
 }

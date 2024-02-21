@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -10,24 +7,71 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum Role {
-    admin
-    user
+model Cliente {
+    email           String?
+    username        String?
+    senha           String?
+    nome            String?
+    cpf             String     @unique
+    telefone        String
+    data_nascimento DateTime?
+    createdAt       DateTime   @default(now())
+    updatedAt       DateTime?  @updatedAt
+    cliente_id      Int        @id @default(autoincrement())
+    Endereco        Endereco[]
+    pedido          Pedido[]
 }
 
-enum UserStatus {
-    active
-    inactive
+model Categoria {
+    categoria_id        Int       @id @default(autoincrement())
+    nome_categoria      String?
+    descricao_categoria String?
+    produto             Produto[]
 }
 
-model User {
-    id          Int         @id @default(autoincrement())
-    email       String      @unique
-    name        String
-    password    String
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime?   @updatedAt
-    role        Role
-    phoneNumber String      @unique
-    status      UserStatus? @default(active)
+model Endereco {
+    endereco_id Int     @id @default(autoincrement())
+    cep         String?
+    rua         String?
+    bairro      String?
+    cidade      String?
+    numero      String?
+    complemento String?
+    uf          String?
+    cliente_id  Int
+    cliente     Cliente @relation(fields: [cliente_id], references: [cliente_id])
+}
+
+model Pedido {
+    pedido_id          Int             @id @default(autoincrement())
+    numero_pedido      Int?
+    valor_total_pedido Int?
+    data_pedido        DateTime        @default(now())
+    status             Boolean?
+    cliente_id         Int
+    cliente            Cliente         @relation(fields: [cliente_id], references: [cliente_id])
+    produtoPedido      ProdutoPedido[]
+}
+
+model Produto {
+    produto_id            Int             @unique @default(autoincrement())
+    nome_produto          String?
+    descricao_produto     String?
+    preco_produto         Int?
+    qtd_estoque           Int?
+    data_cadastro_produto DateTime?       @default(now())
+    imagem                String?
+    categoria_id          Int
+    categoria             Categoria       @relation(fields: [categoria_id], references: [categoria_id])
+    produtoPedido         ProdutoPedido[]
+}
+
+model ProdutoPedido {
+    produto_pedido_id    Int     @unique @default(autoincrement())
+    qtd_produto_pedido   Int?
+    preco_produto_pedido Int?
+    produto_id           Int
+    pedido_id            Int
+    pedido               Pedido  @relation(fields: [pedido_id], references: [pedido_id])
+    produto              Produto @relation(fields: [produto_id], references: [produto_id])
 }

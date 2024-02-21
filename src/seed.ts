@@ -3,15 +3,26 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.user.create({
-        data: {
-            email: 'teste@teste.com',
-            password:
-                '$2a$10$TYLWGxA6wUQLgHbxEaUSveJZJ9hzdtc6YcVMj/3uzirSUr5u3dQM.',
-            name: 'Teste',
-            phoneNumber: '99999999999',
-            role: 'admin',
-        },
+    await prisma.cliente.createMany({
+        data: [
+            {
+                email: 'teste@teste.com',
+                username: 'teste',
+                senha: '$2a$10$TYLWGxA6wUQLgHbxEaUSveJZJ9hzdtc6YcVMj/3uzirSUr5u3dQM.',
+                cpf: '55555555555',
+                nome: 'Teste',
+                telefone: '99999999999',
+                data_nascimento: '2024-02-20T12:38:44.881Z',
+            },
+            {
+                email: 'teste@teste.com',
+                username: 'teste',
+                cpf: '55555555551',
+                nome: 'Teste',
+                telefone: '99999999999',
+                data_nascimento: '2024-02-20T12:38:44.881Z',
+            },
+        ],
     });
 }
 
