@@ -1,12 +1,14 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Role } from '../../enums/roles.enum';
+import { plainToClass } from 'class-transformer';
 import { PrismaService } from '../../prisma.service';
 import {
+    createUserRequestMock,
     createUserResponseMock,
     prismaMock,
     usersMock,
-} from '../../resources/users.mock';
+} from '../../resources/mocks/users.mock';
+import { UserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -45,14 +47,16 @@ describe('UsersService', () => {
             expect(response).toEqual(usersMock[0]);
             expect(prisma.cliente.findFirst).toHaveBeenCalledTimes(1);
             expect(prisma.cliente.findFirst).toHaveBeenCalledWith({
-                where: { id: 1 },
+                where: { cliente_id: 1 },
                 select: {
                     email: true,
-                    name: true,
-                    phoneNumber: true,
-                    role: true,
-                    status: true,
+                    nome: true,
+                    telefone: true,
+                    data_nascimento: true,
                     createdAt: true,
+                    username: true,
+                    updatedAt: true,
+                    cpf: true,
                 },
             });
         });
@@ -68,14 +72,16 @@ describe('UsersService', () => {
 
             expect(prisma.cliente.findFirst).toHaveBeenCalledTimes(1);
             expect(prisma.cliente.findFirst).toHaveBeenCalledWith({
-                where: { id: 100 },
+                where: { cliente_id: 100 },
                 select: {
                     email: true,
-                    name: true,
-                    phoneNumber: true,
-                    role: true,
-                    status: true,
+                    nome: true,
+                    telefone: true,
+                    data_nascimento: true,
                     createdAt: true,
+                    username: true,
+                    updatedAt: true,
+                    cpf: true,
                 },
             });
         });
@@ -83,29 +89,31 @@ describe('UsersService', () => {
 
     describe('create', () => {
         it('should create a new user', async () => {
-            const response = await service.create(usersMock[0]);
-            console.log(response);
+            const response = await service.create(createUserRequestMock);
 
-            expect(response).toStrictEqual(createUserResponseMock);
+            const userResponse = plainToClass(UserDto, response);
+
+            expect(userResponse).toEqual(createUserResponseMock);
             expect(prisma.cliente.create).toHaveBeenCalledTimes(1);
         });
 
-        it('should return ConflitException when duplicated email', async () => {
+        it('should return ConflitException when duplicated cpf', async () => {
             const user = {
-                name: 'Usuário',
-                email: 'usuario@teste.com',
-                password: '123456',
-                role: Role.Admin,
-                phoneNumber: '11999999999',
-                status: 'active',
+                email: 'teste@teste.com',
+                username: 'teste',
+                senha: '123456',
+                cpf: '55555555556',
+                nome: 'Teste',
+                telefone: '99999999999',
+                data_nascimento: new Date('2012-02-20T12:38:44.881Z'),
             };
 
             jest.spyOn(prisma.cliente, 'create').mockRejectedValue(
-                new ConflictException('duplicated-email')
+                new ConflictException('duplicated-cpf')
             );
 
             await expect(service.create(user)).rejects.toEqual(
-                new ConflictException('duplicated-email')
+                new ConflictException('duplicated-cpf')
             );
 
             expect(prisma.cliente.create).toHaveBeenCalledTimes(1);
@@ -113,12 +121,13 @@ describe('UsersService', () => {
 
         it('should return ConflitException when duplicated phone number', async () => {
             const user = {
-                name: 'Usuário',
-                email: 'usuario@teste.com',
-                password: '123456',
-                role: Role.Admin,
-                phoneNumber: '11999999999',
-                status: 'active',
+                email: 'teste@teste.com',
+                username: 'teste',
+                senha: '123456',
+                cpf: '55555555556',
+                nome: 'Teste',
+                telefone: '99999999999',
+                data_nascimento: new Date('2012-02-20T12:38:44.881Z'),
             };
 
             jest.spyOn(prisma.cliente, 'create').mockRejectedValue(

@@ -29,18 +29,16 @@ import { UsersService } from './users.service';
 export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
-    //@Roles(Role.Admin)
     @Post()
     @Swagger(createUserResponse)
-    @ApiOperation({ summary: 'Create an user on DB' })
+    @ApiOperation({ summary: 'Create an consumer on DB' })
     async create(@Body() createUserDto: CreateUserDto) {
         return await this.userService.create(createUserDto);
     }
 
-    //@Roles(Role.Admin)
     @Patch(':id')
     @Swagger(updateUserResponse)
-    @ApiOperation({ summary: 'Update an user using parameter ID' })
+    @ApiOperation({ summary: 'Update an consumer using parameter ID' })
     async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateUserDto: UpdateUserDto
@@ -52,26 +50,23 @@ export class UsersController {
         return await this.userService.update(id, updateUserDto);
     }
 
-    //@Roles(Role.Admin)
     @Get()
     @Swagger(findAllResponse)
-    @ApiOperation({ summary: 'Return all users registred in DB' })
+    @ApiOperation({ summary: 'Return all consumers registred in DB' })
     async findAll() {
         return await this.userService.findAll();
     }
 
-    //@Roles(Role.Admin)
     @Get(':id')
     @Swagger(findOneResponse)
-    @ApiOperation({ summary: 'Return one user by ID' })
+    @ApiOperation({ summary: 'Return one consumer by ID' })
     async findOne(@Param('id', ParseIntPipe) id: number) {
         return await this.userService.findOne(id);
     }
 
-    //@Roles(Role.Admin)
     @Delete(':id')
     @Swagger(deleteUserResponse)
-    @ApiOperation({ summary: 'Delete on user by ID' })
+    @ApiOperation({ summary: 'Delete an consumer by ID' })
     async delete(
         @Param('id', ParseIntPipe) id: number,
         @User() payload: UserPayload

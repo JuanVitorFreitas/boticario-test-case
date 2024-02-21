@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
-import { RolesGuard } from './guards/role.guard';
 import { AddressModule } from './modules/address/address.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoryModule } from './modules/category/category.module';
@@ -25,10 +24,6 @@ import { UsersModule } from './modules/users/users.module';
         {
             provide: APP_GUARD,
             useClass: AuthGuard,
-        },
-        {
-            provide: APP_GUARD,
-            useClass: RolesGuard,
         },
     ],
 })

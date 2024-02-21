@@ -1,13 +1,4 @@
-import { ApiResponseOptions } from '@nestjs/swagger';
-
-export type ApiResponseSchema = {
-    [key in
-        | 'success'
-        | 'ok'
-        | 'unauthorized'
-        | 'conflict'
-        | 'notFound']?: ApiResponseOptions;
-};
+import { ApiResponseSchema } from './api-response-schema';
 
 export const createProductOrderResponse: ApiResponseSchema = {
     success: {

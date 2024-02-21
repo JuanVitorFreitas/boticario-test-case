@@ -40,9 +40,9 @@ export class AddressService {
     }
 
     async findAll() {
-        const adresses = await this.prisma.endereco.findMany();
+        const addresses = await this.prisma.endereco.findMany();
 
-        return adresses;
+        return addresses;
     }
 
     async findOne(endereco_id: number) {

@@ -1,12 +1,15 @@
 import { Exclude } from 'class-transformer';
 import {
+    IsDate,
     IsEmail,
     IsISO8601,
+    IsInt,
     IsNotEmpty,
     IsOptional,
     IsPhoneNumber,
     IsString,
     Length,
+    Min,
     MinLength,
 } from 'class-validator';
 
@@ -44,4 +47,14 @@ export class CreateUserDto {
 export class UserDto extends CreateUserDto {
     @Exclude()
     senha: string;
+
+    @IsDate()
+    createdAt: Date;
+
+    @IsDate()
+    updatedAt: Date;
+
+    @IsInt()
+    @Min(1)
+    cliente_id: number;
 }

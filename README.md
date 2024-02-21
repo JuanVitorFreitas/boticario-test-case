@@ -1,6 +1,6 @@
 ## Description
 
-This is a repository for a test at Grupo Boticário.
+This is a repository for a tryout at Grupo Boticário.
 
 ## Installation
 
@@ -12,7 +12,7 @@ $ pnpm install
 
 ```bash
 # download, create and run the Postgres contianer
-$ docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pass123 postgres
+$ docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=<password> postgres
 
 # Ensure that the Postgres container is built and currently executing
 $ docker ps
@@ -21,9 +21,8 @@ $ docker ps
 ## Create a `.env` file in the project root folder. Example constants
 
 ```env
-DATABASE_URL="postgresql://postgres:pass123@localhost:5432/postgres?schema=public"
+DATABASE_URL="postgresql://postgres:<password>@localhost:5432/postgres?schema=public"
 
-# Secret used to create the JWT tokens
 JWT_SECRET = '**********'
 ```
 
@@ -59,9 +58,6 @@ $ http://localhost:3000/api-json
 ```bash
 # unit tests
 $ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
 
 # test coverage
 $ pnpm run test:cov

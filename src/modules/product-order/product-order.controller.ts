@@ -8,7 +8,7 @@ import {
     Patch,
     Post,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Swagger } from '../../decorators/swagger.decorator';
 import {
     createProductOrderResponse,
@@ -29,24 +29,28 @@ export class ProductOrderController {
 
     @Post()
     @Swagger(createProductOrderResponse)
+    @ApiOperation({ summary: 'Create an product order on DB' })
     create(@Body() createProductOrderDto: CreateProductOrderDto) {
         return this.productOrderService.create(createProductOrderDto);
     }
 
     @Get()
     @Swagger(findAllResponse)
+    @ApiOperation({ summary: 'Return all product order registred in DB' })
     findAll() {
         return this.productOrderService.findAll();
     }
 
     @Get(':id')
     @Swagger(findOneResponse)
+    @ApiOperation({ summary: 'Return one product order by ID' })
     findOne(@Param('id', ParseIntPipe) produto_pedido_id: number) {
         return this.productOrderService.findOne(produto_pedido_id);
     }
 
     @Patch(':id')
     @Swagger(updateProductOrderResponse)
+    @ApiOperation({ summary: 'Update an product order using parameter ID' })
     update(
         @Param('id', ParseIntPipe) produto_pedido_id: number,
         @Body() updateProductOrderDto: UpdateProductOrderDto
@@ -59,6 +63,7 @@ export class ProductOrderController {
 
     @Delete(':id')
     @Swagger(deleteProductOrderResponse)
+    @ApiOperation({ summary: 'Delete an product order by ID' })
     remove(@Param('id', ParseIntPipe) produto_pedido_id: number) {
         return this.productOrderService.remove(produto_pedido_id);
     }

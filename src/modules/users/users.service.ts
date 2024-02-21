@@ -152,20 +152,22 @@ export class UsersService {
     }
 
     async delete(id: number) {
-        const user = await this.prisma.cliente.findFirst({
-            where: {
-                cliente_id: id,
-            },
-        });
-
-        if (!user) {
-            throw new NotFoundException('user not found');
+        try {
+            await this.prisma.cliente.delete({
+                where: {
+                    cliente_id: id,
+                },
+            });
+        } catch (err) {
+            if (err instanceof PrismaClientKnownRequestError) {
+                if (err.code === PrismaErrorCodes.ForeignKeyConstraintFailed) {
+                    const fieldName = err.meta?.field_name as string;
+                    throw new ConflictException(
+                        `Foreign key constraint on field ${fieldName}`
+                    );
+                }
+            }
+            throw err;
         }
-
-        await this.prisma.cliente.delete({
-            where: {
-                cliente_id: id,
-            },
-        });
     }
 }
