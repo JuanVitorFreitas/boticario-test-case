@@ -8,7 +8,7 @@ export const createCategoryResponse: ApiResponseSchema = {
                 descricao_categoria: 'Perfumes masculinos e femininos',
             },
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: false,
     },
     unauthorized: {
@@ -56,7 +56,7 @@ export const findAllResponse: ApiResponseSchema = {
                 },
             ],
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: true,
     },
     unauthorized: {
@@ -77,7 +77,7 @@ export const findOneResponse: ApiResponseSchema = {
                 descricao_categoria: 'Perfumes masculinos e femininos',
             },
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: false,
     },
     unauthorized: {

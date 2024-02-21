@@ -11,7 +11,7 @@ export const createProductOrderResponse: ApiResponseSchema = {
                 pedido_id: 2,
             },
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: false,
     },
     unauthorized: {
@@ -65,7 +65,7 @@ export const findAllResponse: ApiResponseSchema = {
                 },
             ],
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: true,
     },
     unauthorized: {
@@ -89,7 +89,7 @@ export const findOneResponse: ApiResponseSchema = {
                 pedido_id: 2,
             },
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: false,
     },
     unauthorized: {

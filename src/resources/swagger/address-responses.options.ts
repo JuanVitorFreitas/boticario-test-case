@@ -15,7 +15,7 @@ export const createAddressResponse: ApiResponseSchema = {
                 cliente_id: 13,
             },
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: false,
     },
     unauthorized: {
@@ -77,7 +77,7 @@ export const findAllResponse: ApiResponseSchema = {
                 },
             ],
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: true,
     },
     unauthorized: {
@@ -105,7 +105,7 @@ export const findOneResponse: ApiResponseSchema = {
                 cliente_id: 13,
             },
         },
-        // description: 'Return error 404 when user not found',
+
         isArray: false,
     },
     unauthorized: {
