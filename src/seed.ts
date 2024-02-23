@@ -20,7 +20,7 @@ async function main() {
         },
     });
 
-    const consumer = await prisma.cliente.create({
+    await prisma.cliente.create({
         data: {
             email: 'teste@teste.com',
             username: 'teste',
@@ -54,24 +54,6 @@ async function main() {
                     },
                 },
             },
-        },
-    });
-
-    const order = await prisma.pedido.create({
-        data: {
-            numero_pedido: 1,
-            valor_total_pedido: 1500,
-            status: true,
-            cliente_id: consumer.cliente_id,
-        },
-    });
-
-    await prisma.produtoPedido.create({
-        data: {
-            pedido_id: order.pedido_id,
-            produto_id: product.produto_id,
-            preco_produto_pedido: 1500,
-            qtd_produto_pedido: 20,
         },
     });
 }
