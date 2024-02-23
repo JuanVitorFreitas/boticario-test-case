@@ -3,6 +3,23 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+    const product = await prisma.produto.create({
+        data: {
+            nome_produto: 'Perfume The Blend Eau',
+            descricao_produto:
+                'O The Blend Eau de Parfum é uma fragrância masculina Amadeirada Especial, que possui óleo essencial em sua composição. O óleo é produzido através da destilação de quatro especiarias quentes e frescas - Cravo, Canela, Pimenta Preta e Noz Moscada in natura - em um alambique de cobre dentro da fábrica de O Boticário.',
+            preco_produto: 350,
+            qtd_estoque: 20,
+            imagem: '',
+            categoria: {
+                create: {
+                    nome_categoria: 'Perfumes',
+                    descricao_categoria: 'Perfumes masculinos e femininos',
+                },
+            },
+        },
+    });
+
     const consumer = await prisma.cliente.create({
         data: {
             email: 'teste@teste.com',
@@ -23,25 +40,20 @@ async function main() {
                     uf: 'SP',
                 },
             },
-        },
-    });
-
-    const category = await prisma.categoria.create({
-        data: {
-            nome_categoria: 'Perfumes',
-            descricao_categoria: 'Perfumes masculinos e femininos',
-        },
-    });
-
-    const product = await prisma.produto.create({
-        data: {
-            nome_produto: 'Perfume The Blend Eau',
-            descricao_produto:
-                'O The Blend Eau de Parfum é uma fragrância masculina Amadeirada Especial, que possui óleo essencial em sua composição. O óleo é produzido através da destilação de quatro especiarias quentes e frescas - Cravo, Canela, Pimenta Preta e Noz Moscada in natura - em um alambique de cobre dentro da fábrica de O Boticário.',
-            preco_produto: 350,
-            qtd_estoque: 20,
-            imagem: '',
-            categoria_id: category.categoria_id,
+            pedido: {
+                create: {
+                    numero_pedido: 1,
+                    valor_total_pedido: 1500,
+                    status: true,
+                    produtoPedido: {
+                        create: {
+                            produto_id: product.produto_id,
+                            preco_produto_pedido: 1500,
+                            qtd_produto_pedido: 20,
+                        },
+                    },
+                },
+            },
         },
     });
 
