@@ -31,6 +31,7 @@ JWT_SECRET = '**********'
 ```bash
 # run seed to create initial data on DB
 $ npx prisma db seed
+consumer password in seed: 123456
 
 # development
 $ pnpm run start
